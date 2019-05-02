@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.b2international.snowowl</groupId>
+  <artifactId>docker</artifactId>
+  <version>1.0.0</version>
+  
+  <build>
+	<plugins>
+		<plugin>
+		  <groupId>com.spotify</groupId>
+		  <artifactId>dockerfile-maven-plugin</artifactId>
+		  <version>1.4.10</version>
+		  <executions>
+		    <execution>
+		      <phase>package</phase>
+		      <goals>
+		        <goal>build</goal>
+		        <goal>tag</goal>
+		        <goal>push</goal>
+		      </goals>
+		    </execution>
+		  </executions>
+		  <configuration>
+		   <verbose>true</verbose>
+		    <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+		    <repository>${repositoryPrefix}/snowowl</repository>
+		    <tag>server</tag>
+		    <dockerfile>src/Dockerfile</dockerfile>
+		    <contextDirectory>src</contextDirectory>
+		    <buildArgs>
+		      	<SERVER_ARCHIVE>${serverArchive}</SERVER_ARCHIVE>
+		    </buildArgs>
+		  </configuration>
+		</plugin>
+	</plugins>
+  </build>
+  
+</project>
