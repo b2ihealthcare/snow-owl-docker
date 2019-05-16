@@ -4,9 +4,78 @@
   <groupId>com.b2international.snowowl</groupId>
   <artifactId>docker</artifactId>
   <version>1.0.0</version>
+  <packaging>pom</packaging>
+  
+  <properties>
+  	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  	<server.artifactId>com.b2international.snowowl.server.update</server.artifactId>
+  	<server.version>6.16.0-SNAPSHOT</server.version>
+  </properties>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>com.b2international.snowowl</groupId>
+  		<artifactId>${server.artifactId}</artifactId>
+  		<version>${server.version}</version>
+  		<classifier>mysql</classifier>
+  		<type>zip</type>
+  		<scope>provided</scope>
+  	</dependency>
+  </dependencies>
+  
+  <repositories>
+  	<repository>
+      <id>nexus_releases</id>
+      <url>http://nexus:8081/nexus/content/repositories/releases</url>
+    </repository>
+    <repository>
+      <id>nexus_snapshots</id>
+      <url>http://nexus:8081/nexus/content/repositories/snapshots</url>
+    </repository>
+  </repositories>
   
   <build>
 	<plugins>
+		 <plugin>
+        	<artifactId>maven-resources-plugin</artifactId>
+        	<version>3.1.0</version>
+        	<executions>
+	          	<execution>
+	            <id>copy-resources</id>
+	            <phase>prepare-package</phase>
+	            <goals>
+	              <goal>copy-resources</goal>
+	            </goals>
+	            <configuration>
+	              <outputDirectory>${project.build.directory}</outputDirectory>
+	              <resources>
+	                <resource>
+	                  <directory>src</directory>
+	                  <filtering>true</filtering>
+	                </resource>
+	              </resources>              
+	            </configuration>            
+	          </execution>
+        </executions>
+      </plugin>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-dependency-plugin</artifactId>
+			<version>3.1.1</version>
+			<executions>
+				<execution>
+					<id>copy-dependencies</id>
+					<phase>prepare-package</phase>
+					<goals>
+						<goal>copy-dependencies</goal>
+					</goals>
+					<configuration>
+						<outputDirectory>${project.build.directory}\</outputDirectory>
+						<includeArtifactIds>${server.artifactId}</includeArtifactIds>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
 		<plugin>
 		  <groupId>com.spotify</groupId>
 		  <artifactId>dockerfile-maven-plugin</artifactId>
@@ -24,12 +93,11 @@
 		  <configuration>
 		   <verbose>true</verbose>
 		    <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
-		    <repository>${repositoryPrefix}/snowowl</repository>
+		    <repository>${dockerRegistry}/${server.artifactId}-docker</repository>
 		    <tag>server</tag>
-		    <dockerfile>src/Dockerfile</dockerfile>
-		    <contextDirectory>src</contextDirectory>
+		    <contextDirectory>target</contextDirectory>
 		    <buildArgs>
-		      	<SERVER_ARCHIVE>${serverArchive}</SERVER_ARCHIVE>
+		      	<SERVER_ARCHIVE>${server.artifactId}-${server.version}-mysql.zip</SERVER_ARCHIVE>
 		    </buildArgs>
 		  </configuration>
 		</plugin>
