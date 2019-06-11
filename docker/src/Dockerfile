@@ -8,8 +8,6 @@ ARG SGID=1042
 
 VOLUME /tmp
 
-RUN echo "Serverrr archive name: $SERVER_ARCHIVE"
-
 # Install java 1.8 as a pre requirement
 RUN yum -y update -q -e 0 && yum clean all
 RUN yum install -y \
