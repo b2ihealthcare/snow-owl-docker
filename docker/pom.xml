@@ -93,8 +93,8 @@
 		  <configuration>
 		   <verbose>true</verbose>
 		    <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
-		    <repository>${dockerRegistry}/${server.artifactId}-docker</repository>
-		    <tag>server</tag>
+		    <repository>${docker.registry}/${server.artifactId}-docker</repository>
+		    <tag>${server.version}-${server.type}</tag>
 		    <contextDirectory>target</contextDirectory>
 		    <buildArgs>
 		      	<SERVER_ARCHIVE>${server.artifactId}-${server.version}-mysql.zip</SERVER_ARCHIVE>
