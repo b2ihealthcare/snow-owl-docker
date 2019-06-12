@@ -96,6 +96,7 @@
 		    <useMavenSettingsForAuth>true</useMavenSettingsForAuth>
 		    <repository>${docker.registry}/${server.artifactId}-docker</repository>
 		    <tag>${server.version}-${server.type}</tag>
+		    <finalName>snowowl-${server.type}-${server.version}</finalName>
 		    <contextDirectory>target</contextDirectory>
 		    <buildArgs>
 		      	<SERVER_ARCHIVE>${server.artifactId}-${server.version}-mysql.zip</SERVER_ARCHIVE>
