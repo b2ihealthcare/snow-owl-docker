@@ -10,12 +10,12 @@
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   	<server.artifactId>com.b2international.snowowl.server.update</server.artifactId>
   	<server.version>6.16.0-SNAPSHOT</server.version>
-  	<groupId>com.b2international.snowowl</groupId>
+  	<server.groupId>com.b2international.snowowl</server.groupId>
   </properties>
   
   <dependencies>
   	<dependency>
-  		<groupId>${groupId}</groupId>
+  		<groupId>${server.groupId}</groupId>
   		<artifactId>${server.artifactId}</artifactId>
   		<version>${server.version}</version>
   		<classifier>mysql</classifier>
