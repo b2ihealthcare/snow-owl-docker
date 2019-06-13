@@ -49,7 +49,7 @@ RUN rm -rf /usr/share/${SERVER_ARCHIVE}
 RUN rm -f usr/share/snowowl/bin/install_snowowl.sh
 
 # Overwrite config file after installation
-COPY /config/snowowl_config_h2.yml /opt/snowowl/server/snowowl_config.yml
+COPY /config/snowowl_config.yml /opt/snowowl/server/snowowl_config.yml
 
 RUN mkdir /var/log/snowowl
 
