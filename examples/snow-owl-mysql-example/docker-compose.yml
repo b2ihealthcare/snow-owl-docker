@@ -10,7 +10,7 @@ services:
     volumes:
       - ./mysql/mysqldata/:/var/lib/mysql
       - ./mysql/conf.d/:/etc/mysql/conf.d
-      - ./mysql/docker-entrypoint-initdb.d/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql/docker-entrypoint-initdb.d/init_uk.sql:/docker-entrypoint-initdb.d/init_uk.sql
     restart: always
     networks:
       - snowowl
