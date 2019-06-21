@@ -1,0 +1,41 @@
+version: '3.7'
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.0
+    container_name: elasticsearch
+    environment:
+      ES_JAVA_OPTS: "-Xms6g -Xmx6g"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      elastic:
+        aliases:
+         - es
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://es:9200"]
+      interval: 1s
+      timeout: 1s
+      retries: 60
+    ports:
+     - 9200:9200
+     - 9300:9300
+
+
+  snowowl:
+    image: b2ihealthcare/snow-owl:7.0.0
+    container_name: snowowl
+    environment:
+      SO_JAVA_OPTS: "-Xms2g -Xmx2g"
+      ES_CLUSTER_URL: "http://es:9200"
+    depends_on:
+      - elasticsearch
+    networks:
+      - elastic
+    ports:
+      - 8080:8080
+
+networks:
+  elastic:
+
+volumes:
+  esdata: 
