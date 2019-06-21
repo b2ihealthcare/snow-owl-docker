@@ -1,4 +1,4 @@
-version: '3.7'
+version: "3.7"
 services:
   mysql:
     image: mysql:5.7
@@ -7,11 +7,10 @@ services:
       MYSQL_ROOT_PASSWORD: <root_pwd>
       MYSQL_USER: snowowl
       MYSQL_PASSWORD: snowowl
-      MYSQL_DATABASE: snomedStore
     volumes:
-      - mysqldata:/var/lib/mysql
+      - ./mysql/mysqldata/:/var/lib/mysql
       - ./mysql/conf.d/:/etc/mysql/conf.d
-      #- ./mysql/docker-entrypoint-initdb.d/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql/docker-entrypoint-initdb.d/init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: always
     networks:
       - snowowl
@@ -26,7 +25,7 @@ services:
       ES_JAVA_OPTS: "-Xms2g -Xmx2g"
       discovery.type: single-node
       cluster.name: cluster
-      bootstrap.memory_lock: 'true'
+      bootstrap.memory_lock: "true"
     ulimits:
       memlock:
         soft: -1
@@ -48,10 +47,10 @@ services:
 
 
   snowowl:
-    image: "e57615dde5d9" # TODO: get image from docker hub
+    image: ${image}
     container_name: snowowl
     environment:
-      SO_JAVA_OPTS: "-Xms6g -Xmx6g"
+      SO_JAVA_OPTS: "-Xms12g -Xmx12g"
       ES_CLUSTER_URL: "http://es:9200"
       MYSQL_URL: "mysql:3306/"
     depends_on:
