@@ -8,7 +8,7 @@ services:
       MYSQL_USER: snowowl
       MYSQL_PASSWORD: snowowl
     volumes:
-      - ./mysql/mysqldata/:/var/lib/mysql
+      - ./mysql/mysqldata/:/var/lib/mysql:Z
       - ./mysql/conf.d/:/etc/mysql/conf.d
       - ./mysql/docker-entrypoint-initdb.d/init_uk.sql:/docker-entrypoint-initdb.d/init_uk.sql
     restart: always
