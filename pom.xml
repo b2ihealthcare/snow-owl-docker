@@ -14,11 +14,8 @@
 		<server.version>6.16.0</server.version>
 		<server.groupId>com.b2international.snowowl</server.groupId>
 		<!-- Docker image configuration -->
-		<docker.registry>snowowl.b2i.sg:8083</docker.registry>
-		<server.type>oss</server.type>
-		<!-- Nexus/Maven repository config -->
-		<nexus.releases.url>http://nexus:8081/nexus/content/repositories/releases</nexus.releases.url>
-		<nexus.snapshots.url>http://nexus:8081/nexus/content/repositories/snapshots</nexus.snapshots.url>
+		<docker.registry></docker.registry>
+		<server.type></server.type>
 	</properties>
 
 	<dependencies>
@@ -66,7 +63,7 @@
 			<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>dockerfile-maven-plugin</artifactId>
-				<version>1.4.10</version>
+				<version>1.4.12</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
