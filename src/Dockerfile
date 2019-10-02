@@ -35,7 +35,7 @@ RUN chown -R snowowl:snowowl /usr/share/${SERVER_ARCHIVE}
 
 RUN mkdir /usr/share/snowowl && mkdir /usr/share/snowowl/bin
 
-COPY install_snowowl.sh /usr/share/snowowl/bin/install_snowowl.sh
+COPY /src/install_snowowl.sh /usr/share/snowowl/bin/install_snowowl.sh
 
 RUN chgrp 0 /usr/share/snowowl/bin/install_snowowl.sh && \
     chmod g=u /etc/passwd && \
@@ -49,7 +49,7 @@ RUN rm -rf /usr/share/${SERVER_ARCHIVE}
 RUN rm -f usr/share/snowowl/bin/install_snowowl.sh
 
 # Overwrite config file after installation
-COPY /config/snowowl_config.yml /opt/snowowl/server/snowowl_config.yml
+COPY /src/config/snowowl_config.yml /opt/snowowl/server/snowowl_config.yml
 
 RUN mkdir /var/log/snowowl
 
