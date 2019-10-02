@@ -1,0 +1,92 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.b2international.snowowl</groupId>
+	<artifactId>docker</artifactId>
+	<version>1.0.0</version>
+	<packaging>pom</packaging>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Snow Owl Server artifact configuration parameters -->
+		<server.artifactId>com.b2international.snowowl.server.update</server.artifactId>
+		<server.version>6.16.0</server.version>
+		<server.groupId>com.b2international.snowowl</server.groupId>
+		<!-- Docker image configuration -->
+		<docker.registry></docker.registry>
+		<server.type></server.type>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${server.groupId}</groupId>
+			<artifactId>${server.artifactId}</artifactId>
+			<version>${server.version}</version>
+			<classifier>mysql</classifier>
+			<type>zip</type>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>nexus_releases</id>
+			<url>${nexus.releases.url}</url>
+		</repository>
+		<repository>
+			<id>nexus_snapshots</id>
+			<url>${nexus.snapshots.url}</url>
+		</repository>
+	</repositories>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/src</outputDirectory>
+							<includeArtifactIds>${server.artifactId}</includeArtifactIds>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.12</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+							<goal>tag</goal>
+							<goal>push</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<contextDirectory>src</contextDirectory>
+					<verbose>true</verbose>
+					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
+					<repository>${docker.registry}/${server.artifactId}-docker</repository>
+					<tag>${server.version}-${server.type}</tag>
+					<finalName>snowowl-${server.type}-${server.version}</finalName>
+					<buildArgs>
+						<SERVER_ARCHIVE>${server.artifactId}-${server.version}-mysql.zip</SERVER_ARCHIVE>
+					</buildArgs>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

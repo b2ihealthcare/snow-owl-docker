@@ -1,0 +1,69 @@
+version: "3.7"
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: <root_pwd>
+      MYSQL_USER: snowowl
+      MYSQL_PASSWORD: snowowl
+    volumes:
+      - ${DATASET_PATH}:/var/lib/mysql:Z
+      - ./mysql/conf.d/:/etc/mysql/conf.d
+      - ./mysql/docker-entrypoint-initdb.d/init_uk.sql:/docker-entrypoint-initdb.d/init_uk.sql
+    restart: always
+    networks:
+      - snowowl
+    ports:
+      - 3307:3306
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.5.0
+    container_name: elasticsearch
+    
+    environment:
+      ES_JAVA_OPTS: "-Xms2g -Xmx2g"
+      discovery.type: single-node
+      cluster.name: cluster
+      bootstrap.memory_lock: "true"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    networks:
+      snowowl:
+        aliases:
+         - es
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://es:9200"]
+      interval: 1s
+      timeout: 1s
+      retries: 60
+    ports:
+      - 9200:9200
+      - 9300:9300
+
+
+  snowowl:
+    image: ${IMAGE}
+    container_name: snowowl
+    environment:
+      SO_JAVA_OPTS: "-Xms12g -Xmx12g"
+      ES_CLUSTER_URL: "http://es:9200"
+      MYSQL_URL: "mysql:3306/"
+    depends_on:
+      - mysql
+      - elasticsearch
+    networks:
+      - snowowl
+    ports:
+      - 8080:8080
+
+networks:
+  snowowl:
+
+volumes:
+  mysqldata:
+  esdata:
