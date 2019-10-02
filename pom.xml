@@ -53,6 +53,7 @@
 						<configuration>
 							<outputDirectory>${basedir}</outputDirectory>
 							<includeArtifactIds>${server.artifactId}</includeArtifactIds>
+							<overWriteIfNewer>true</overWriteIfNewer>
 						</configuration>
 					</execution>
 				</executions>
