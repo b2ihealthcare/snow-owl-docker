@@ -2,45 +2,63 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	
 	<groupId>com.b2international.snowowl</groupId>
 	<artifactId>docker</artifactId>
-	<version>7.0.0</version>
+	<version>1.0.0</version>
 	<packaging>pom</packaging>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<!-- Docker image configuration -->
-		<docker.registry>snowowl.b2i.sg:8083</docker.registry>
+		<server.artifactId>com.b2international.snowowl.server.update</server.artifactId>
+		<server.version>7.2.0-SNAPSHOT</server.version>
+		<server.groupId>com.b2international.snowowl</server.groupId>
+		<server.classifier>rpm</server.classifier>
+		<server.file.type>rpm</server.file.type>
 	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${server.groupId}</groupId>
+			<artifactId>${server.artifactId}</artifactId>
+			<version>${server.version}</version>
+			<classifier>${server.classifier}</classifier>
+			<type>${server.file.type}</type>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>nexus_releases</id>
+			<url>${nexus.releases.url}</url>
+		</repository>
+		<repository>
+			<id>nexus_snapshots</id>
+			<url>${nexus.snapshots.url}</url>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>com.spotify</groupId>
-				<artifactId>dockerfile-maven-plugin</artifactId>
-				<version>1.4.10</version>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.1.1</version>
 				<executions>
 					<execution>
-						<phase>package</phase>
+						<id>copy-dependencies</id>
+						<phase>prepare-package</phase>
 						<goals>
-							<goal>build</goal>
-							<goal>tag</goal>
-							<goal>push</goal>
+							<goal>copy-dependencies</goal>
 						</goals>
+						<configuration>
+							<outputDirectory>${basedir}</outputDirectory>
+							<includeArtifactIds>${server.artifactId}</includeArtifactIds>
+							<overWriteIfNewer>true</overWriteIfNewer>
+						</configuration>
 					</execution>
 				</executions>
-				<configuration>
-					<contextDirectory>src</contextDirectory>
-					<dockerfile>${basedir}/src/Dockerfile</dockerfile>
-					<verbose>true</verbose>
-					<useMavenSettingsForAuth>true</useMavenSettingsForAuth>
-					<repository>${docker.registry}/snowowl7x</repository>
-					<tag>snowowl-${project.version}</tag>
-					<buildArgs>
-						<SNOWOWL_VERSION>${project.version}</SNOWOWL_VERSION>
-					</buildArgs>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>
+
 </project>

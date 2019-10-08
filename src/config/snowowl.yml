@@ -17,25 +17,18 @@ identity:
 #        userIdProperty: uid
 #        usePool: false
 
-# snomed:
-#  concreteDomainSupport: false
-#  maxReasonerCount: 1
-#  ids:
-#    strategy : EMBEDDED
+snomed:
+  languages:
+    -
+      code: en
+      refSetIds: ["900000000000509007", "900000000000508004"]
+    -
+      code: en-us
+      refSetIds: ["900000000000509007"]
+    -
+      code: en-gb
+      refSetIds: ["900000000000508004"]
 
-repository:
-  host: 0.0.0.0
-  port: 2036
+monitoring:
+  enabled: true
 
-  index:
-    socketTimeout: 60000
-    clusterUrl: ${ES_CLUSTER_URL}
-
-# monitoring:
-#  enabled: true
-
-  #reviewManager:
-  # Minutes to keep reviews in CURRENT state persisted in the index (default 15 minutes)
-  # keepCurrentMins: 15
-  # Minutes to keep reviews in others states persisted (default 5 minutes)
-  # keepOtherMins: 5 
